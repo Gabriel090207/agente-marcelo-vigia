@@ -1,0 +1,4 @@
+firebase_key.json
+.venv
+conversas.db
+__pycache__/
