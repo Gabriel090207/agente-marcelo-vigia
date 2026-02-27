@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  background-color: #0f0f0f;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.title {
+  color: white;
+  margin-bottom: 30px;
+}
+
+.loading {
+  color: white;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.card {
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: 0.2s ease-in-out;
+}
+
+.card:hover {
+  background-color: #292929;
+}
+
+.header {
+  font-size: 18px;
+  color: #4cafef;
+  margin-bottom: 8px;
+}
+
+.message {
+  color: #ddd;
+  margin-bottom: 10px;
+}
+
+.date {
+  color: #888;
+  font-size: 12px;
+}

@@ -7,9 +7,11 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app)  # 🔥 permite frontend externo acessar API
+CORS(app)
 
-# 🔐 Inicializar Firebase via variável de ambiente
+# =========================
+# 🔐 Inicializar Firebase
+# =========================
 firebase_json = os.environ.get("FIREBASE_CREDENTIALS")
 
 if not firebase_json:
@@ -21,9 +23,8 @@ firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-
 # =========================
-# WEBHOOK Z-API
+# 🔥 WEBHOOK Z-API
 # =========================
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -59,26 +60,26 @@ def webhook():
             "timestamp_zapi": timestamp,
             "data_recebimento_servidor": datetime.now(),
             "mensagem": mensagem,
-            "json_bruto": data
+            "ultima_atualizacao": firestore.SERVER_TIMESTAMP
         }
 
-        db.collection("conversas").add(registro)
+        # 🔥 Usa o número como ID do documento
+        db.collection("conversas").document(numero).set(registro)
 
-        return jsonify({"status": "salvo no firebase"}), 200
+        return jsonify({"status": "atualizado com sucesso"}), 200
 
     except Exception as e:
         return jsonify({"erro": str(e)}), 400
 
 
 # =========================
-# API PARA O FRONTEND
+# 📡 API PARA O FRONTEND
 # =========================
 @app.route('/api/conversas', methods=['GET'])
 def listar_conversas():
-    conversas_ref = db.collection("conversas").order_by(
-        "data_recebimento_servidor",
-        direction=firestore.Query.DESCENDING
-    ).stream()
+    conversas_ref = db.collection("conversas") \
+        .order_by("ultima_atualizacao", direction=firestore.Query.DESCENDING) \
+        .stream()
 
     resultado = []
 
@@ -91,7 +92,7 @@ def listar_conversas():
 
 
 # =========================
-# ROTA HOME
+# 🏠 ROTA HOME
 # =========================
 @app.route('/')
 def home():
@@ -99,7 +100,7 @@ def home():
 
 
 # =========================
-# START
+# 🚀 START
 # =========================
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
