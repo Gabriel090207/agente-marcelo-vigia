@@ -22,23 +22,26 @@ db = firestore.client()
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    data = request.json
+    try:
+        data = request.get_json(force=True)
 
-    numero = data.get("phone")
-    mensagem = data.get("text", {}).get("message")
-    data_hora = datetime.now()
+        numero = data.get("phone")
+        mensagem = data.get("text", {}).get("message")
+        data_hora = datetime.now()
 
-    registro = {
-        "numero": numero,
-        "mensagem": mensagem,
-        "data_recebimento": data_hora,
-        "json_bruto": data
-    }
+        registro = {
+            "numero": numero,
+            "mensagem": mensagem,
+            "data_recebimento": data_hora,
+            "json_bruto": data
+        }
 
-    db.collection("conversas").add(registro)
+        db.collection("conversas").add(registro)
 
-    return jsonify({"status": "salvo no firebase"}), 200
+        return jsonify({"status": "salvo no firebase"}), 200
 
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 400
 
 @app.route('/')
 def home():
