@@ -25,14 +25,36 @@ def webhook():
     try:
         data = request.get_json(force=True)
 
+        # Campos principais (Z-API padrão)
         numero = data.get("phone")
-        mensagem = data.get("text", {}).get("message")
-        data_hora = datetime.now()
+        message_id = data.get("messageId")
+        tipo = data.get("type")
+        from_me = data.get("fromMe")
+        timestamp = data.get("time")
+        nome_contato = data.get("senderName")
+
+        mensagem = None
+
+        if tipo == "text":
+            mensagem = data.get("text", {}).get("message")
+        elif tipo == "image":
+            mensagem = "📷 Imagem recebida"
+        elif tipo == "audio":
+            mensagem = "🎧 Áudio recebido"
+        elif tipo == "video":
+            mensagem = "🎥 Vídeo recebido"
+        else:
+            mensagem = "Tipo não identificado"
 
         registro = {
             "numero": numero,
+            "message_id": message_id,
+            "tipo": tipo,
+            "from_me": from_me,
+            "nome_contato": nome_contato,
+            "timestamp_zapi": timestamp,
+            "data_recebimento_servidor": datetime.now(),
             "mensagem": mensagem,
-            "data_recebimento": data_hora,
             "json_bruto": data
         }
 
