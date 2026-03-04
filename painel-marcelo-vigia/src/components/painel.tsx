@@ -14,11 +14,17 @@ export default function Painel({ conversas }: Props) {
 
       <div className="cards-container">
         {conversas.map((c) => (
-          <div key={c.id} className="card">
-            <h3>{c.nome_contato || "Sem nome"}</h3>
-            <p>{c.numero}</p>
-          </div>
-        ))}
+  <div key={c.id} className="card">
+    <h3>{c.nome_contato || "Sem nome"}</h3>
+    <p>{c.numero}</p>
+
+    <p className="data-msg">
+      {c.data_recebimento_servidor
+        ? new Date(c.data_recebimento_servidor).toLocaleString("pt-BR")
+        : "Sem data"}
+    </p>
+  </div>
+))}
       </div>
     </div>
   );
