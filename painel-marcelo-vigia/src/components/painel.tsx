@@ -16,7 +16,11 @@ export default function Painel({ conversas }: Props) {
         {conversas.map((c) => (
   <div key={c.id} className="card">
     <h3>{c.nome_contato || "Sem nome"}</h3>
-    <p>{c.numero}</p>
+    <p>
+  {c.numero
+    ? `+${c.numero.substring(0, 2)} ${c.numero.substring(2, 4)} ${c.numero.substring(4, 10)}`
+    : "Número desconhecido"}
+</p>
 
     <p className="data-msg">
       {c.data_recebimento_servidor
